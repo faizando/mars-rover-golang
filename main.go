@@ -34,12 +34,14 @@ func getPlateauCoordinates(line string) (x int, y int) {
 	if s, err := strconv.Atoi(char[0]); err == nil {
 		x = s
 	} else {
+		fmt.Println("Error", err)
 		os.Exit(1)
 	}
 
 	if s, err := strconv.Atoi(char[1]); err == nil {
 		y = s
 	} else {
+		fmt.Println("Error", err)
 		os.Exit(1)
 	}
 
