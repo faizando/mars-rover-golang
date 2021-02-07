@@ -9,12 +9,22 @@ import (
 )
 
 type plateau struct {
-	x int
-	y int
+	x, y int
+}
+
+type rover struct {
+	x, y                int
+	direction, commands string
 }
 
 func main() {
 
+	// validDirections := "NEWS"
+	// validCommands := "LRM"
+
+	rl := []rover{}
+
+	// read file passed in arg
 	dat, err := ioutil.ReadFile(os.Args[1])
 
 	if err != nil {
@@ -23,26 +33,30 @@ func main() {
 	}
 
 	l := strings.Split(string(dat), "\n")
-	plateauLine := l[:1][0]
-	fmt.Println(plateauLine)
-	fmt.Println(getPlateauCoordinates(plateauLine))
+	p := getPlateauCoordinates(l[:1][0]) // plateauLine := l[:1][0]
+	fmt.Println(p)
+
+	// save rover list
+	rl = append(rl, rover{1, 2, "N", "LM"})
+	fmt.Println(rl)
+
+	// process rover commands
+	// todo
 }
 
-func getPlateauCoordinates(line string) (x int, y int) {
+func getPlateauCoordinates(line string) plateau {
 	char := strings.Fields(line)
+	p := plateau{}
 
 	if cx, err := strconv.Atoi(char[0]); err == nil {
 		if cy, err := strconv.Atoi(char[1]); err == nil {
 			if cx >= 0 && cy >= 0 {
-				x = cx
-				y = cy
+				p.x = cx
+				p.y = cy
 			} else {
 				fmt.Println("Error, input plateau coordinate invalid")
 				os.Exit(1)
 			}
-
-	if s, err := strconv.Atoi(char[1]); err == nil {
-		y = s
 		} else {
 			fmt.Println("Error, could not read input plateau coordinate", err)
 			os.Exit(1)
@@ -52,5 +66,5 @@ func getPlateauCoordinates(line string) (x int, y int) {
 		os.Exit(1)
 	}
 
-	return x, y
+	return p
 }
