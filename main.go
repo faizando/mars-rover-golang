@@ -13,31 +13,29 @@ type plateau struct {
 }
 
 type rover struct {
-	x, y                int
-	direction, commands string
+	x, y     int
+	dir, com string
 }
 
 func main() {
 
-	// validDirections := "NEWS"
+	// validdirs := "NEWS"
 	// validCommands := "LRM"
 
-	rl := []rover{}
-
 	// read file passed in arg
-	dat, err := ioutil.ReadFile(os.Args[1])
+	input, err := ioutil.ReadFile(os.Args[1])
 
 	if err != nil {
 		fmt.Println("Error:", err)
 		os.Exit(1)
 	}
 
-	l := strings.Split(string(dat), "\n")
-	p := getPlateauCoordinates(l[:1][0]) // plateauLine := l[:1][0]
+	// l := strings.Split(string(input), "\n")[:1][0]
+	p := getPlateauCoordinates(strings.Split(string(input), "\n")[:1][0]) // plateauLine := l[:1][0]
 	fmt.Println(p)
 
 	// save rover list
-	rl = append(rl, rover{1, 2, "N", "LM"})
+	rl := getListOfRovers(strings.Split(string(input), "\n")[1:])
 	fmt.Println(rl)
 
 	// process rover commands
@@ -67,4 +65,47 @@ func getPlateauCoordinates(line string) plateau {
 	}
 
 	return p
+}
+
+func getListOfRovers(input []string) []rover {
+	rl := []rover{}
+
+	// flatten 2 line input per rover into one line
+	for i := 1; i < len(input); i += 2 {
+
+		ri := input[i-1] + " " + input[i]
+		rl = append(rl, getRover(ri))
+	}
+
+	return rl
+}
+
+func getRover(roverInput string) rover {
+	char := strings.Fields(roverInput)
+	//todo if rover has no commands to save
+
+	r := rover{}
+
+	if cx, err := strconv.Atoi(char[0]); err == nil {
+		if cy, err := strconv.Atoi(char[1]); err == nil {
+			if cx >= 0 && cy >= 0 {
+				r.x = cx
+				r.y = cy
+				r.dir = char[2]
+				r.com = char[3]
+			} else {
+				fmt.Println("Error, rover input values invalid")
+				os.Exit(1)
+			}
+
+		} else {
+			fmt.Println("Error, could not read rover input values", err)
+			os.Exit(1)
+		}
+	} else {
+		fmt.Println("Error, could not read rover input values", err)
+		os.Exit(1)
+	}
+
+	return r
 }
