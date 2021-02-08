@@ -88,13 +88,14 @@ func getRover(roverInput string) rover {
 
 	if cx, err := strconv.Atoi(char[0]); err == nil {
 		if cy, err := strconv.Atoi(char[1]); err == nil {
+			// Will throw error if rover lands in negative bounds
 			if cx >= 0 && cy >= 0 {
 				r.x = cx
 				r.y = cy
 				r.dir = char[2]
 				r.com = char[3]
 			} else {
-				fmt.Println("Error, rover input values invalid")
+				fmt.Println("Error, rover input value invalid")
 				os.Exit(1)
 			}
 
