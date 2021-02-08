@@ -19,7 +19,6 @@ type rover struct {
 
 func main() {
 
-	// validdirs := "NEWS"
 	// validCommands := "LRM"
 
 	// read file passed in arg
@@ -81,21 +80,29 @@ func getListOfRovers(input []string) []rover {
 }
 
 func getRover(roverInput string) rover {
+	validDirs := "NEWS"
 	char := strings.Fields(roverInput)
-	//todo if rover has no commands to save
+
+	// Assumption: rover always given coordinates x,y, direction, and command(s)
+	if len(char) != 4 {
+		fmt.Println("Error, rover input values provided ", char, "are invalid")
+		os.Exit(1)
+	}
 
 	r := rover{}
 
 	if cx, err := strconv.Atoi(char[0]); err == nil {
 		if cy, err := strconv.Atoi(char[1]); err == nil {
-			// Will throw error if rover lands in negative bounds
-			if cx >= 0 && cy >= 0 {
-				r.x = cx
-				r.y = cy
+
+			// Assumption will allow rovers to land outside 0,plateau, life
+			r.x = cx
+			r.y = cy
+			r.com = char[3]
+
+			if strings.Contains(validDirs, char[2]) {
 				r.dir = char[2]
-				r.com = char[3]
 			} else {
-				fmt.Println("Error, rover input value invalid")
+				fmt.Println("Error, rover input direction '", char[2], "' is invalid")
 				os.Exit(1)
 			}
 
