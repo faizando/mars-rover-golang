@@ -19,26 +19,21 @@ type rover struct {
 
 func main() {
 
-	// validCommands := "LRM"
-
 	// read file passed in arg
 	input, err := ioutil.ReadFile(os.Args[1])
-
 	if err != nil {
 		fmt.Println("Error:", err)
 		os.Exit(1)
 	}
 
-	// l := strings.Split(string(input), "\n")[:1][0]
-	p := getPlateauCoordinates(strings.Split(string(input), "\n")[:1][0]) // plateauLine := l[:1][0]
-	fmt.Println(p)
+	p := getPlateauCoordinates(strings.Split(string(input), "\n")[:1][0])
+	// fmt.Println(p)
 
-	// save rover list
 	rl := getListOfRovers(strings.Split(string(input), "\n")[1:])
-	fmt.Println(rl)
+	// fmt.Println(rl)
 
-	// process rover commands
-	// todo
+	processRoversAndPrintResult(p, rl)
+	// fmt.Println(result)
 }
 
 func getPlateauCoordinates(line string) plateau {
@@ -118,65 +113,91 @@ func getRover(roverInput string) rover {
 	return r
 }
 
-func processRoversAndPrintResult(p plateau, rl []rover) {
+func processRoversAndPrintResult(p plateau, roverlist []rover) {
 
-	// move rover and when cannot move further and wont collide print it
-	// so not looping twice, more elegant solution
+	rl := roverlist
 
-	for i, r := range rl {
+	for _, r := range rl {
+
+		// TODO remove? rover checking from the array so that can simply loop on it and will not need: if cri != ri
+
+		// crl := rl[:i-1]
+		// crl = append(crl, rl[i:])
 
 		// rover within plateau and >= 0,0
 		if r.x >= 0 && r.x <= p.x && r.y >= 0 && r.y <= p.y {
 
-			// compare to cr (control rover)
-			for ci, cr := range rl {
+			// haltCommands := false
+			for _, com := range r.com {
+
+				r.processCommand(string(com))
+
+				// TODO when only one rover don't compare
+				// TODO collision detection
+
+				// when more than one rover compare for collisions
+				// compare to cr (control rover)
+				// for cri, cr := range crl {
+
 				// index not same so that do not check collision with itself
 				// TODO should check will not collide with the most up to date rover x,r not the control because here control is original copy of the input!
-				if ci != i && roverWillNotCollide(r, cr) {
-					processCommand(r)
-					r.move()
-					r.print()
-				}
+				// TODO will rl in forloop update if i change it within the loop here??
+
+				// if cri != ri {
+
+				// 	// TODO when there is only one rover in thelist will compare to itself
+				// 	//TODO  && !roverWillGoOutOfBounds(r, p)
+
+				// 	if !roverWillCollide(r, cr) {
+				// 		r.processCommand(string(com))
+				// 	} else {
+				// 		haltCommands = true
+				// 		break
+				// 	}
+				// }
+
+				// }
+
+				// if haltCommands == true {
+				// 	break
+				// }
+
 			}
 
 		}
+
+		r.print()
+
 	}
 
 }
 
-func processCommand(r rover, c string) (rover, error) {
+func (r *rover) processCommand(c string) {
+
 	validCommands := "LRM"
 
-	rt := r
-
 	if strings.Contains(validCommands, c) {
-		switch c {
-		case "L":
-		case "R":
-			rt.spin(c)
-		case "M":
-			// todo check collision here before moving?
-			rt.move()
+		if c == "M" {
+			r.move()
+		} else {
+			r.spin(c)
 		}
 	} else {
 		fmt.Println("Error, command ", c, " to rover is invalid")
 		os.Exit(1)
-		// return rt, nil
 	}
-
-	return rt, nil
-
 }
 
-func roverWillNotCollide(r rover, cr rover) bool {
+func roverWillCollide(r rover, cr rover) bool {
 	r2 := r
 	r2.move()
-	if r2.x != cr.x && r2.y != cr.y {
+	if r2.x == cr.x && r2.y == cr.y {
 		return true
 	}
 	return false
 }
 
+//TODO move *rover functions into its own file
 func (r *rover) print() {
 	fmt.Println(r.x, r.y, r.dir)
 }
