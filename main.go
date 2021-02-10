@@ -27,13 +27,9 @@ func main() {
 	}
 
 	p := getPlateauCoordinates(strings.Split(string(input), "\n")[:1][0])
-	// fmt.Println(p)
-
 	rl := getListOfRovers(strings.Split(string(input), "\n")[1:])
-	// fmt.Println(rl)
-
 	processRoversAndPrintResult(p, rl)
-	// fmt.Println(result)
+
 }
 
 func getPlateauCoordinates(line string) plateau {
@@ -117,57 +113,43 @@ func processRoversAndPrintResult(p plateau, roverlist []rover) {
 
 	rl := roverlist
 
-	for _, r := range rl {
+	for i := range rl {
 
-		// TODO remove? rover checking from the array so that can simply loop on it and will not need: if cri != ri
+		willCol := false
+		if rl[i].x >= 0 && rl[i].x <= p.x && rl[i].y >= 0 && rl[i].y <= p.y {
 
-		// crl := rl[:i-1]
-		// crl = append(crl, rl[i:])
+			for _, com := range rl[i].com {
 
-		// rover within plateau and >= 0,0
-		if r.x >= 0 && r.x <= p.x && r.y >= 0 && r.y <= p.y {
+				if string(com) != "M" {
+					rl[i].processCommand(string(com))
+				} else {
+					for j := range rl {
 
-			// haltCommands := false
-			for _, com := range r.com {
+						if i != j {
 
-				r.processCommand(string(com))
+							if roverWillCollide(rl[i], rl[j]) {
+								willCol = true
+								break
+							} else {
+								willCol = false
+							}
 
-				// TODO when only one rover don't compare
-				// TODO collision detection
+						}
 
-				// when more than one rover compare for collisions
-				// compare to cr (control rover)
-				// for cri, cr := range crl {
+					}
 
-				// index not same so that do not check collision with itself
-				// TODO should check will not collide with the most up to date rover x,r not the control because here control is original copy of the input!
-				// TODO will rl in forloop update if i change it within the loop here??
-
-				// if cri != ri {
-
-				// 	// TODO when there is only one rover in thelist will compare to itself
-				// 	//TODO  && !roverWillGoOutOfBounds(r, p)
-
-				// 	if !roverWillCollide(r, cr) {
-				// 		r.processCommand(string(com))
-				// 	} else {
-				// 		haltCommands = true
-				// 		break
-				// 	}
-				// }
-
-				// }
-
-				// if haltCommands == true {
-				// 	break
-				// }
+					if willCol {
+						break
+					} else {
+						rl[i].processCommand(string(com))
+					}
+				}
 
 			}
 
 		}
 
-		r.print()
-
+		rl[i].print()
 	}
 
 }
