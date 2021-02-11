@@ -34,3 +34,31 @@ func TestRoverSpin(t *testing.T) {
 	}
 
 }
+
+func TestRoverMove(t *testing.T) {
+	r := rover{x: 1, y: 1, dir: "N", com: "LLM"}
+
+	r.move()
+	if r.x != 1 || r.y != 2 {
+		t.Errorf("Expected rover to be {x: 1, y: 2}, but got rover: %v", r)
+	}
+
+	r.dir = "S"
+	r.move()
+	if r.x != 1 || r.y != 1 {
+		t.Errorf("Expected rover to be {x: 1, y: 1}, but got rover: %v", r)
+	}
+
+	r.dir = "E"
+	r.move()
+	if r.x != 2 || r.y != 1 {
+		t.Errorf("Expected rover to be {x: 2, y: 1}, but got rover: %v", r)
+	}
+
+	r.dir = "W"
+	r.move()
+	if r.x != 1 || r.y != 1 {
+		t.Errorf("Expected rover to be {x: 1, y: 1}, but got rover: %v", r)
+	}
+
+}
