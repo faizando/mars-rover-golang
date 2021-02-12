@@ -31,7 +31,7 @@ func TestGetPlateauCoordinates(t *testing.T) {
 	for _, tc := range tests {
 		_, gotErr := getPlateauCoordinates(tc.input)
 		if !reflect.DeepEqual(gotErr, tc.expectedErr) {
-			t.Fatalf("Expected: %v, \n Got: %v", gotErr, tc.expectedErr)
+			t.Errorf("Expected: %v, \n Got: %v", tc.expectedErr, gotErr)
 		}
 	}
 
