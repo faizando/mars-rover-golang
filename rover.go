@@ -2,29 +2,11 @@ package main
 
 import (
 	"fmt"
-	"os"
-	"strings"
 )
 
 type rover struct {
 	x, y     int
 	dir, com string
-}
-
-func (r *rover) processCommand(c string) {
-
-	validCommands := "LRM"
-
-	if strings.Contains(validCommands, c) {
-		if c == "M" {
-			r.move()
-		} else {
-			r.spin(c)
-		}
-	} else {
-		fmt.Println("Error, command ", c, " to rover is invalid")
-		os.Exit(1)
-	}
 }
 
 func (r *rover) print() {

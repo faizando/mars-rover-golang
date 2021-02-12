@@ -115,20 +115,26 @@ func processRoversAndPrintResult(p plateau, roverlist []rover) {
 
 			for _, com := range rl[i].com {
 
+				if !strings.Contains("LRM", string(com)) {
+					fmt.Println("Error, command ", string(com), " to rover is invalid")
+					os.Exit(1)
+				}
+
 				if string(com) != "M" {
-					rl[i].processCommand(string(com))
+
+					rl[i].spin(string(com))
+
 				} else {
+
 					for j := range rl {
 
 						if i != j {
-
 							if roverWillCollide(rl[i], rl[j]) {
 								willCol = true
 								break
 							} else {
 								willCol = false
 							}
-
 						}
 
 					}
@@ -136,7 +142,7 @@ func processRoversAndPrintResult(p plateau, roverlist []rover) {
 					if willCol {
 						break
 					} else {
-						rl[i].processCommand(string(com))
+						rl[i].move()
 					}
 				}
 
