@@ -28,7 +28,7 @@ func processRoversAndPrintResult(p plateau, roverlist []rover) {
 
 	for i := range rl {
 
-		willCol := false
+		collide := false
 		if rl[i].x >= 0 && rl[i].x <= p.x && rl[i].y >= 0 && rl[i].y <= p.y {
 
 			for _, com := range rl[i].com {
@@ -48,16 +48,14 @@ func processRoversAndPrintResult(p plateau, roverlist []rover) {
 
 						if i != j {
 							if roverWillCollide(rl[i], rl[j]) {
-								willCol = true
+								collide = true
 								break
-							} else {
-								willCol = false
 							}
 						}
 
 					}
 
-					if willCol {
+					if collide {
 						break
 					} else {
 						rl[i].move()
