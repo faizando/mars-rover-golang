@@ -22,7 +22,12 @@ func main() {
 		os.Exit(1)
 	}
 
-	rl := getListOfRovers(strings.Split(string(input), "\n")[1:])
+	rl, err := getListOfRovers(strings.Split(string(input), "\n")[1:])
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+
 	processRoversAndPrintResult(p, rl)
 
 }

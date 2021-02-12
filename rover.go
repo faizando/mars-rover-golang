@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"os"
 	"strconv"
 	"strings"
 )
@@ -55,30 +54,32 @@ func (r *rover) move() {
 	}
 }
 
-func getListOfRovers(input []string) []rover {
-	rl := []rover{}
+func getListOfRovers(input []string) (rl []rover, err error) {
 
 	// flatten 2 line input per rover into one line
 	for i := 1; i < len(input); i += 2 {
 
 		ri := input[i-1] + " " + input[i]
-		rl = append(rl, getRover(ri))
+
+		r, err := getRover(ri)
+		if err != nil {
+			return rl, err
+		}
+
+		rl = append(rl, r)
 	}
 
-	return rl
+	return rl, nil
 }
 
-func getRover(roverInput string) rover {
+func getRover(roverInput string) (r rover, err error) {
 	validDirs := "NEWS"
 	char := strings.Fields(roverInput)
 
 	// Assumption: rover always given coordinates x,y, direction, and command(s)
 	if len(char) != 4 {
-		fmt.Println("Error, rover input values provided ", char, "are invalid")
-		os.Exit(1)
+		return r, fmt.Errorf("Error, rover input values provided %v are invalid", char)
 	}
-
-	r := rover{}
 
 	if cx, err := strconv.Atoi(char[0]); err == nil {
 		if cy, err := strconv.Atoi(char[1]); err == nil {
@@ -91,20 +92,17 @@ func getRover(roverInput string) rover {
 			if strings.Contains(validDirs, char[2]) {
 				r.dir = char[2]
 			} else {
-				fmt.Println("Error, rover input direction '", char[2], "' is invalid")
-				os.Exit(1)
+				return r, fmt.Errorf("Error, rover input direction '%v' is invalid", char[2])
 			}
 
 		} else {
-			fmt.Println("Error, could not read rover input values", err)
-			os.Exit(1)
+			return r, fmt.Errorf("Error, input rover y coordinate value of '%v' is invalid", string(char[1]))
 		}
 	} else {
-		fmt.Println("Error, could not read rover input values", err)
-		os.Exit(1)
+		return r, fmt.Errorf("Error, input rover x coordinate value of '%v' is invalid", string(char[0]))
 	}
 
-	return r
+	return r, nil
 }
 
 func roverWillCollide(r rover, cr rover) bool {
