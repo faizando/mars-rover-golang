@@ -16,7 +16,12 @@ func main() {
 		os.Exit(1)
 	}
 
-	p := getPlateauCoordinates(strings.Split(string(input), "\n")[:1][0])
+	p, err := getPlateauCoordinates(strings.Split(string(input), "\n")[:1][0])
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+
 	rl := getListOfRovers(strings.Split(string(input), "\n")[1:])
 	processRoversAndPrintResult(p, rl)
 
