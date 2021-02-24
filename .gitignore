@@ -1,13 +1,18 @@
+.idea
+.vscode
+
 # Mac OS X files
 .DS_Store
 
-# Binaries for programs and plugins
-*.exe
+# Binaries, plugins, libs
 *.dll
-*.so
 *.dylib
+*.exe
+*.exe~
+*.so
+mars-rover-golang
 
 # Test binary, build with `go test -c`
 *.test
+*.tmp
 
-notes.md
